@@ -68,32 +68,38 @@ function initMap() {
   //   Listen for click on map
   google.maps.event.addListener(map, "click", function (event) {
     if (mapMarked == false) {
-      addMarker({ cords: event.latLng });
+      addMarker({
+        cords: event.latLng,
+        metadata: { id: "destMarker" },
+      });
       mapMarked = true;
       removeMark.style.display = "inline-block";
     }
   });
 
-  //   remove mark
-  removeMark.addEventListener("click", () => {
-    mapMarked = false;
-    location.reload();
-  });
-
-  let defaultMarkers = [
-    {
-      cords: { lat: 40.7474824, lng: 14.6324808 },
-    },
-  ];
-
-  for (let Marker of defaultMarkers) {
-    addMarker(Marker);
-  }
+  let defaultMarkers = {
+    cords: { lat: 40.7474824, lng: 14.6324808 },
+  };
+  addMarker(defaultMarkers);
 
   function addMarker(props) {
     var marker = new google.maps.Marker({
       position: props.cords,
-      map: map,
+    });
+    marker.setMap(map);
+    if (props.metadata) {
+      marker.metadata = props.metadata;
+    }
+    removeMarked(marker);
+  }
+
+  //   remove mark
+  function removeMarked(marker) {
+    removeMark.addEventListener("click", () => {
+      marker.setMap(null);
+      addMarker(defaultMarkers);
+      removeMark.style.display = "none";
+      mapMarked = false;
     });
   }
 }
