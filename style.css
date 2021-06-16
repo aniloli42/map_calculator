@@ -30,6 +30,15 @@
   border-radius: 5px;
 }
 
+.remove-mark {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: var(--reset-color);
+  color: var(--light);
+  display: none;
+  cursor: pointer;
+}
+
 .calc-form form .input-group {
   display: grid;
   grid-template-columns: 1fr;

@@ -3,6 +3,8 @@ let addTax = 0;
 let priceMessage = "";
 let inputValues = [];
 let displayPrice = document.getElementById("displayResult");
+let mapMarked = false;
+const removeMark = document.getElementById("removeMark");
 
 class getValues {
   constructor(distance, time, toll) {
@@ -63,19 +65,34 @@ function initMap() {
 
   let map = new google.maps.Map(document.getElementById("map"), options);
 
-  let Markers = [
+  //   Listen for click on map
+  google.maps.event.addListener(map, "click", function (event) {
+    if (mapMarked == false) {
+      addMarker({ cords: event.latLng });
+      mapMarked = true;
+      removeMark.style.display = "inline-block";
+    }
+  });
+
+  //   remove mark
+  removeMark.addEventListener("click", () => {
+    mapMarked = false;
+    location.reload();
+  });
+
+  let defaultMarkers = [
     {
       cords: { lat: 40.7474824, lng: 14.6324808 },
-      iconImage: ``,
-      content: `<h1>Repaired Immediately Nocera Inferiore</h1>`,
     },
   ];
 
-  addMarker(Markers[0]);
+  for (let Marker of defaultMarkers) {
+    addMarker(Marker);
+  }
 
   function addMarker(props) {
-    let maker = new google.maps.Marker({
-      position: props.coords,
+    var marker = new google.maps.Marker({
+      position: props.cords,
       map: map,
     });
   }
