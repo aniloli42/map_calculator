@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Map Calculator</title>
+  </head>
+  <body>
+    <div class="container">
+      <script defer src="script.js"></script>
+      <div class="map"></div>
+      <div class="calc-form">
+        <form id="calcMain">
+          <div class="input-group">
+            <label for="distance">Distance (in km):</label>
+            <input type="number" name="distance" id="distance" />
+          </div>
+          <div class="input-group">
+            <label for="time">Time (in minutes):</label>
+            <input type="number" name="time" id="time" />
+          </div>
+          <div class="input-group">
+            <label for="toll">Toll:</label>
+            <input type="radio" name="toll" value="yes" />Yes
+            <input type="radio" name="toll" value="no" checked />No
+          </div>
+          <div class="input-group">
+            <input type="submit" value="Calculate" />
+            <input type="reset" value="Reset" />
+          </div>
+        </form>
+        <div class="display-result" id="displayResult"></div>
+      </div>
+    </div>
+  </body>
+</html>
