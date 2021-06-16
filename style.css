@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --calc-color: #1f0d79;
+  --reset-color: rgb(182, 38, 38);
+  --message-color: #4bb543;
+  --light: #fff;
+}
+
+.map {
+  width: 100%;
+  height: 400px;
+}
+
+.container {
+  display: grid;
+  place-items: center;
+}
+
+.calc-form {
+  width: 90%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.calc-form form .input-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  margin: 10px auto;
+}
+
+.calc-form form .input-group label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.calc-form
+  form
+  .input-group
+  input:not(input[type="submit"]):not(input[type="reset"]):not(input[type="radio"]) {
+  width: 100%;
+  height: 30px;
+  padding: 5px;
+}
+
+.calc-form form .input-group input[type="radio"] {
+  margin-left: 10px;
+  margin-right: 5px;
+}
+
+.calc-form form .input-group#formButtons {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 10px;
+}
+
+.calc-form form .input-group#formButtons input {
+  border: none;
+  padding: 10px 30px;
+  color: var(--light);
+}
+
+.calc-form form .input-group#formButtons input[type="submit"] {
+  background-color: var(--calc-color);
+}
+
+.calc-form form .input-group#formButtons input[type="reset"] {
+  background-color: var(--reset-color);
+}
+
+.display-result {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--message-color);
+  font-size: 25px;
+  text-align: center;
+  color: var(--light);
+  display: none;
+}
+
+@media (min-width: 465px) {
+  .calc-form {
+    min-width: 400px;
+  }
+}

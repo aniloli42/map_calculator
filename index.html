@@ -10,25 +10,42 @@
   <body>
     <div class="container">
       <script defer src="script.js"></script>
-      <div class="map"></div>
+      <div class="map" id="map">
+        <script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD10IpcW7YRx54biuXEsRvLYda-oABxoCE&callback=initMap"
+          async
+        ></script>
+      </div>
       <div class="calc-form">
         <form id="calcMain">
           <div class="input-group">
-            <label for="distance">Distance (in km):</label>
-            <input type="number" name="distance" id="distance" />
+            <label for="distance">Distanza</label>
+            <input
+              type="number"
+              name="distance"
+              placeholder="(in km)"
+              id="distance"
+            />
           </div>
           <div class="input-group">
-            <label for="time">Time (in minutes):</label>
-            <input type="number" name="time" id="time" />
+            <label for="time">Tempo</label>
+            <input
+              type="number"
+              name="time"
+              id="time"
+              placeholder="(in minuti)"
+            />
           </div>
-          <div class="input-group">
-            <label for="toll">Toll:</label>
-            <input type="radio" name="toll" value="yes" />Yes
-            <input type="radio" name="toll" value="no" checked />No
+          <div class="input-group" id="tollDiv">
+            <label for="toll">Pedaggio</label>
+            <div class="radio">
+              <input type="radio" name="toll" value="yes" />si
+              <input type="radio" name="toll" value="no" checked />no
+            </div>
           </div>
-          <div class="input-group">
-            <input type="submit" value="Calculate" />
-            <input type="reset" value="Reset" />
+          <div class="input-group" id="formButtons">
+            <input type="submit" value="Calcola" />
+            <input type="reset" value="Reset" id="resetBtn" />
           </div>
         </form>
         <div class="display-result" id="displayResult"></div>
