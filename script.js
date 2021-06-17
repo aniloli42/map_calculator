@@ -10,6 +10,9 @@ let getTime;
 let secondMarkCords;
 const distanceBox = document.getElementById("distance");
 const timeBox = document.getElementById("time");
+let defaultMarkers = {
+  cords: { lat: 40.7474824, lng: 14.6324808 },
+};
 
 class getValues {
   constructor(distance, time, toll) {
@@ -58,6 +61,9 @@ class getValues {
       displayResult.style.backgroundColor = "red";
       displayResult.innerHTML = `${priceMessage}`;
       displayResult.style.display = "block";
+      setTimeout(() => {
+        displayResult.style.display = "none";
+      }, 3000);
     }
   }
 }
@@ -81,9 +87,6 @@ function initMap() {
     }
   });
 
-  let defaultMarkers = {
-    cords: { lat: 40.7474824, lng: 14.6324808 },
-  };
   addMarker(defaultMarkers);
 
   function addMarker(props) {
@@ -125,7 +128,7 @@ function initMap() {
         if (status == google.maps.DirectionsStatus.OK) {
           // get distance and time
           getDistance = result.routes[0].legs[0].distance.text;
-          getTime = result.routes[0].legs[0].duration.text;
+          getTime = result.routes[0].legs[0].duration.value;
           console.log(result, getTime, getDistance);
 
           distanceBox.value = getDistance;
@@ -154,6 +157,9 @@ function initMap() {
       timeBox.value = "";
       removeMark.style.display = "none";
       mapMarked = false;
+      displayResult.style.display = "none";
+      distanceBox.value = "";
+      timeBox.value = "";
     });
   }
 }
@@ -171,9 +177,22 @@ calcMainForm.addEventListener("submit", (e) => {
   for (const form of formData) {
     inputValues.push(form[1]);
   }
-
-  const calcObj = new getValues(inputValues[0], inputValues[1], inputValues[2]);
-  calcObj.calculatePrice();
+  if ((inputValues[0] != "") & (inputValues[1] != "")) {
+    const calcObj = new getValues(
+      inputValues[0],
+      inputValues[1],
+      inputValues[2]
+    );
+    calcObj.calculatePrice();
+  } else {
+    displayResult.innerHTML = `Select in the map`;
+    displayResult.style.display = "block";
+    displayResult.style.backgroundColor = "red";
+    setTimeout(() => {
+      displayResult.innerHTML = "";
+      displayResult.style.display = "none";
+    }, 3000);
+  }
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
