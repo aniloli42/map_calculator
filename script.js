@@ -5,6 +5,11 @@ let inputValues = [];
 let displayPrice = document.getElementById("displayResult");
 let mapMarked = false;
 const removeMark = document.getElementById("removeMark");
+let getDistance;
+let getTime;
+let secondMarkCords;
+const distanceBox = document.getElementById("distance");
+const timeBox = document.getElementById("time");
 
 class getValues {
   constructor(distance, time, toll) {
@@ -68,11 +73,10 @@ function initMap() {
   //   Listen for click on map
   google.maps.event.addListener(map, "click", function (event) {
     if (mapMarked == false) {
+      mapMarked = true;
       addMarker({
         cords: event.latLng,
-        metadata: { id: "destMarker" },
       });
-      mapMarked = true;
       removeMark.style.display = "inline-block";
     }
   });
@@ -87,17 +91,64 @@ function initMap() {
       position: props.cords,
     });
     marker.setMap(map);
-    if (props.metadata) {
-      marker.metadata = props.metadata;
+    if (mapMarked) {
+      secondMarkCords = props.cords;
+      calcRoute();
     }
     removeMarked(marker);
+
+    // create a Directions service object to use the route method
+    var directionsService = new google.maps.DirectionsService();
+
+    // create a DirectionsRenderrer object which will using to display the route
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+
+    // bind the directionsRenderrer to the map
+    directionsDisplay.setMap(map);
+
+    // function of calculate the route
+    function calcRoute() {
+      // create request
+      var request = {
+        origin: [defaultMarkers.cords],
+        destination: [secondMarkCords.cords],
+        travelMode: google.maps.TravelMode.DRIVING, // DRIVING can change to BICYCLE, WALKING
+        unitSystem: google.maps.UnitSystem.METRIC,
+      };
+
+      console.log(directionsService);
+
+      // pass the request to the route method
+      directionsService.route(request, (result, status) => {
+        if (status == google.maps.DirectionsStatus.OK) {
+          // get distance and time
+          getDistance = result.routes[0].legs[0].distance.text;
+          getTime = result.routes[0].legs[0].duration.text;
+          console.log(result, getTime, getDistance);
+
+          distanceBox.value = getDistance;
+          timeBox.value = getTime;
+
+          directionsDisplay.setDirections(result);
+        } else {
+          // defaultMarkers
+          map.setCenter(defaultMarkers);
+
+          // show error
+          console.log("error");
+        }
+      });
+    }
   }
 
   //   remove mark
   function removeMarked(marker) {
     removeMark.addEventListener("click", () => {
+      // remove the
+      directionsDisplay.setDirections({ routes: [] });
       marker.setMap(null);
       addMarker(defaultMarkers);
+      secondMarkCords = "";
       removeMark.style.display = "none";
       mapMarked = false;
     });
