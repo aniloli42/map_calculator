@@ -14,60 +14,6 @@ let defaultMarkers = {
   cords: { lat: 40.7474824, lng: 14.6324808 },
 };
 
-class getValues {
-  constructor(distance, time, toll) {
-    this.distance = distance;
-    this.time = time;
-    this.toll = toll;
-  }
-
-  calculatePrice() {
-    if ((this.time <= 25) & (this.distance <= 20)) {
-      servicePrice = 0;
-      addTax = 0;
-    } else if ((this.time <= 35) & (this.distance <= 20)) {
-      if (this.toll == "no") {
-        servicePrice = 5;
-        addTax = 0;
-      } else {
-        servicePrice = 5;
-        addTax = 3;
-      }
-    } else if ((this.time <= 30) & (this.distance <= 30)) {
-      servicePrice = 10;
-      addTax = 0;
-    } else if ((this.time <= 37) & (this.distance <= 40)) {
-      if (this.toll == "no") {
-        servicePrice = 15;
-        addTax = 0;
-      } else {
-        servicePrice = 15;
-        addTax = 5;
-      }
-    } else if ((this.time <= 44) & (this.distance <= 43)) {
-      servicePrice = 20;
-      addTax = 0;
-    } else {
-      priceMessage = "Service Out of Range";
-    }
-
-    if (priceMessage == "") {
-      displayResult.innerHTML = `Prezzo Totale: &euro; ${
-        servicePrice + addTax
-      }`;
-      displayResult.style.backgroundColor = "#4bb543";
-      displayResult.style.display = "block";
-    } else {
-      displayResult.style.backgroundColor = "red";
-      displayResult.innerHTML = `${priceMessage}`;
-      displayResult.style.display = "block";
-      setTimeout(() => {
-        displayResult.style.display = "none";
-      }, 3000);
-    }
-  }
-}
-
 function initMap() {
   let options = {
     zoom: 15,
@@ -138,9 +84,6 @@ function initMap() {
         } else {
           // defaultMarkers
           map.setCenter(defaultMarkers);
-
-          // show error
-          console.log("error");
         }
       });
     }
@@ -161,6 +104,60 @@ function initMap() {
       distanceBox.value = "";
       timeBox.value = "";
     });
+  }
+}
+
+class getValues {
+  constructor(distance, time, toll) {
+    this.distance = distance;
+    this.time = time;
+    this.toll = toll;
+  }
+
+  calculatePrice() {
+    if ((this.time <= 25) & (this.distance <= 20)) {
+      servicePrice = 0;
+      addTax = 0;
+    } else if ((this.time <= 35) & (this.distance <= 20)) {
+      if (this.toll == "no") {
+        servicePrice = 5;
+        addTax = 0;
+      } else {
+        servicePrice = 5;
+        addTax = 3;
+      }
+    } else if ((this.time <= 30) & (this.distance <= 30)) {
+      servicePrice = 10;
+      addTax = 0;
+    } else if ((this.time <= 37) & (this.distance <= 40)) {
+      if (this.toll == "no") {
+        servicePrice = 15;
+        addTax = 0;
+      } else {
+        servicePrice = 15;
+        addTax = 5;
+      }
+    } else if ((this.time <= 44) & (this.distance <= 43)) {
+      servicePrice = 20;
+      addTax = 0;
+    } else {
+      priceMessage = "Service Out of Range";
+    }
+
+    if (priceMessage == "") {
+      displayResult.innerHTML = `Prezzo Totale: &euro; ${
+        servicePrice + addTax
+      }`;
+      displayResult.style.backgroundColor = "#4bb543";
+      displayResult.style.display = "block";
+    } else {
+      displayResult.style.backgroundColor = "red";
+      displayResult.innerHTML = `${priceMessage}`;
+      displayResult.style.display = "block";
+      setTimeout(() => {
+        displayResult.style.display = "none";
+      }, 3000);
+    }
   }
 }
 
