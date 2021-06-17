@@ -8,15 +8,20 @@
     <title>Map Calculator</title>
   </head>
   <body>
-    <div class="container">
-      <script defer src="script.js"></script>
-      <div class="map" id="map">
-        <script
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD10IpcW7YRx54biuXEsRvLYda-oABxoCE&callback=initMap&library="
-          async
-        ></script>
+    <div class="map-container">
+      <div class="map-title">MAPPA</div>
+      <div class="map" id="map"></div>
+      <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9-Db60OMlGAXLJeyl97GSwFXz6Vw6Q3s&callback=initMap&libraries=places"
+        async
+        type="text/javascript"
+      ></script>
+      <div class="place-address">
+        <label for="placeAddress">Address</label>
+        <input type="text" id="placeAddress" placeholder="Enter Your Address" />
+        <div class="place-message" id="placeMessage"></div>
+        <div id="placeBtn">Locate</div>
       </div>
-      <div class="remove-mark" id="removeMark">Remove Mark</div>
       <div class="calc-form">
         <form id="calcMain">
           <div class="input-group">
@@ -46,11 +51,12 @@
           </div>
           <div class="input-group" id="formButtons">
             <input type="submit" value="Calcola" />
-            <input type="reset" value="Reset" id="resetBtn" />
+            <input type="reset" value="Reset" id="removeMark" />
           </div>
         </form>
         <div class="display-result" id="displayResult"></div>
       </div>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -8,19 +8,24 @@ const removeMark = document.getElementById("removeMark");
 let getDistance;
 let getTime;
 let secondMarkCords;
+var directionService;
+var directionsDisplay;
+let placeEntered = false;
 const distanceBox = document.getElementById("distance");
 const timeBox = document.getElementById("time");
+var placeAddress = document.getElementById("placeAddress");
+let placeMessage = document.getElementById("placeMessage");
+var options = {
+  zoom: 15,
+  center: { lat: 40.7474824, lng: 14.6324808 },
+};
+
 let defaultMarkers = {
-  cords: { lat: 40.7474824, lng: 14.6324808 },
+  cords: { lat: 40.74741139701506, lng: 14.63262364268303 },
 };
 
 function initMap() {
-  let options = {
-    zoom: 15,
-    center: { lat: 40.7474824, lng: 14.6324808 },
-  };
-
-  let map = new google.maps.Map(document.getElementById("map"), options);
+  var map = new google.maps.Map(document.getElementById("map"), options);
 
   //   Listen for click on map
   google.maps.event.addListener(map, "click", function (event) {
@@ -29,80 +34,113 @@ function initMap() {
       addMarker({
         cords: event.latLng,
       });
-      removeMark.style.display = "inline-block";
+    }
+  });
+
+  // place mark
+
+  var addOption = {
+    types: ["(cities)"],
+  };
+
+  var autocomplete1 = new google.maps.places.Autocomplete(
+    placeAddress,
+    addOption
+  );
+  autocomplete1.bindTo("bounds", map);
+
+  var placeBtn = document.getElementById("placeBtn");
+  placeBtn.addEventListener("click", () => {
+    if ((placeAddress.value != "") & (placeAddress.value != undefined)) {
+      placeEntered = true;
+      placeEnter = placeAddress.value;
+      calcRoute(placeEnter);
     }
   });
 
   addMarker(defaultMarkers);
 
   function addMarker(props) {
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
       position: props.cords,
     });
     marker.setMap(map);
     if (mapMarked) {
-      secondMarkCords = props.cords;
-      distanceBox.value = 10;
-      timeBox.value = 20;
-      // calcRoute();
+      secondMarkCords = {
+        cords: {
+          lat: props.cords.lat(),
+          lng: props.cords.lng(),
+        },
+      };
+      calcRoute(secondMarkCords.cords);
     }
     removeMarked(marker);
+  }
 
-    // create a Directions service object to use the route method
-    var directionsService = new google.maps.DirectionsService();
+  // create a Directions service object to use the route method
+  directionService = new google.maps.DirectionsService();
 
-    // create a DirectionsRenderrer object which will using to display the route
-    var directionsDisplay = new google.maps.DirectionsRenderer();
+  // create a DirectionsRenderrer object which will using to display the route
+  directionsDisplay = new google.maps.DirectionsRenderer();
 
-    // bind the directionsRenderrer to the map
-    directionsDisplay.setMap(map);
+  // bind the directionsRenderrer to the map
+  directionsDisplay.setMap(map);
 
-    // function of calculate the route
-    function calcRoute() {
-      // create request
-      var request = {
-        origin: [defaultMarkers.cords],
-        destination: [secondMarkCords.cords],
-        travelMode: google.maps.TravelMode.DRIVING, // DRIVING can change to BICYCLE, WALKING
-        unitSystem: google.maps.UnitSystem.METRIC,
-      };
+  // function of calculate the route
+  function calcRoute(secondValue) {
+    // create request
+    var request = {
+      origin: defaultMarkers.cords,
+      destination: secondValue,
+      travelMode: "DRIVING", // DRIVING can change to BICYCLE, WALKING
+      unitSystem: google.maps.UnitSystem.METRIC,
+    };
 
-      console.log(directionsService);
+    // pass the request to the route method
+    directionService.route(request, (result, status) => {
+      if (status == google.maps.DirectionsStatus.OK) {
+        // get distance and time
+        getDistanceInMeter = result.routes[0].legs[0].distance.value;
+        getTimeInseconds = result.routes[0].legs[0].duration.value;
 
-      // pass the request to the route method
-      directionsService.route(request, (result, status) => {
-        if (status == google.maps.DirectionsStatus.OK) {
-          // get distance and time
-          getDistance = result.routes[0].legs[0].distance.text;
-          getTime = result.routes[0].legs[0].duration.value;
-          console.log(result, getTime, getDistance);
+        getDistance = getDistanceInMeter / 1000;
+        getTime = getTimeInseconds / 60;
+        getDistance = Math.round(getDistance.toFixed(2));
+        getTime = Math.round(getTime.toFixed(2));
 
-          distanceBox.value = getDistance;
-          timeBox.value = getTime;
+        distanceBox.value = getDistance;
+        timeBox.value = getTime;
 
-          directionsDisplay.setDirections(result);
-        } else {
-          // defaultMarkers
-          map.setCenter(defaultMarkers);
-        }
-      });
-    }
+        directionsDisplay.setDirections(result);
+      } else {
+        map.setCenter(options.center);
+        placeMessage.innerHTML = "Invalid Route or Route not Available";
+        placeMessage.style.display = "block";
+        setTimeout(() => {
+          placeMessage.innerHTML = "";
+          placeMessage.style.display = "none";
+          placeAddress.value = "";
+        }, 3000);
+      }
+    });
   }
 
   //   remove mark
   function removeMarked(marker) {
     removeMark.addEventListener("click", () => {
-      // directionsDisplay.setDirections({ routes: [] });
+      directionsDisplay.setDirections({ routes: [] });
       marker.setMap(null);
-      addMarker(defaultMarkers);
       secondMarkCords = "";
       distanceBox.value = "";
       timeBox.value = "";
-      removeMark.style.display = "none";
       mapMarked = false;
+      map.setCenter(options.center);
+      map.setZoom(15);
+      addMarker(defaultMarkers);
       displayResult.style.display = "none";
       distanceBox.value = "";
       timeBox.value = "";
+      placeAddress.value = "";
     });
   }
 }
@@ -181,6 +219,8 @@ calcMainForm.addEventListener("submit", (e) => {
       inputValues[2]
     );
     calcObj.calculatePrice();
+
+    setTimeout(() => {}, 15000);
   } else {
     displayResult.innerHTML = `Select in the map`;
     displayResult.style.display = "block";
@@ -190,8 +230,4 @@ calcMainForm.addEventListener("submit", (e) => {
       displayResult.style.display = "none";
     }, 3000);
   }
-});
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-  displayResult.style.display = "none";
 });
