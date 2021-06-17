@@ -15,6 +15,9 @@ const distanceBox = document.getElementById("distance");
 const timeBox = document.getElementById("time");
 var placeAddress = document.getElementById("placeAddress");
 let placeMessage = document.getElementById("placeMessage");
+let calcBtn = document.getElementById("calcBtn");
+let countDown = 14;
+let displaytime;
 var options = {
   zoom: 15,
   center: { lat: 40.7474824, lng: 14.6324808 },
@@ -114,7 +117,8 @@ function initMap() {
         directionsDisplay.setDirections(result);
       } else {
         map.setCenter(options.center);
-        placeMessage.innerHTML = "Invalid Route or Route not Available";
+        placeMessage.innerHTML =
+          "Percorso non valido o Percorso non disponibile";
         placeMessage.style.display = "block";
         setTimeout(() => {
           placeMessage.innerHTML = "";
@@ -131,16 +135,27 @@ function initMap() {
       directionsDisplay.setDirections({ routes: [] });
       marker.setMap(null);
       secondMarkCords = "";
-      distanceBox.value = "";
-      timeBox.value = "";
+      calcMainForm.reset();
       mapMarked = false;
       map.setCenter(options.center);
       map.setZoom(15);
       addMarker(defaultMarkers);
       displayResult.style.display = "none";
-      distanceBox.value = "";
-      timeBox.value = "";
       placeAddress.value = "";
+    });
+    calcBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        directionsDisplay.setDirections({ routes: [] });
+        marker.setMap(null);
+        secondMarkCords = "";
+        calcMainForm.reset();
+        mapMarked = false;
+        map.setCenter(options.center);
+        map.setZoom(15);
+        addMarker(defaultMarkers);
+        displayResult.style.display = "none";
+        placeAddress.value = "";
+      }, 15000);
     });
   }
 }
@@ -179,7 +194,7 @@ class getValues {
       servicePrice = 20;
       addTax = 0;
     } else {
-      priceMessage = "Service Out of Range";
+      priceMessage = "Servizio fuori copertura";
     }
 
     if (priceMessage == "") {
@@ -219,10 +234,8 @@ calcMainForm.addEventListener("submit", (e) => {
       inputValues[2]
     );
     calcObj.calculatePrice();
-
-    setTimeout(() => {}, 15000);
   } else {
-    displayResult.innerHTML = `Select in the map`;
+    displayResult.innerHTML = `Seleziona nella mappa`;
     displayResult.style.display = "block";
     displayResult.style.backgroundColor = "red";
     setTimeout(() => {
