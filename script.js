@@ -93,7 +93,9 @@ function initMap() {
     marker.setMap(map);
     if (mapMarked) {
       secondMarkCords = props.cords;
-      calcRoute();
+      distanceBox.value = 10;
+      timeBox.value = 20;
+      // calcRoute();
     }
     removeMarked(marker);
 
@@ -144,11 +146,12 @@ function initMap() {
   //   remove mark
   function removeMarked(marker) {
     removeMark.addEventListener("click", () => {
-      // remove the
-      directionsDisplay.setDirections({ routes: [] });
+      // directionsDisplay.setDirections({ routes: [] });
       marker.setMap(null);
       addMarker(defaultMarkers);
       secondMarkCords = "";
+      distanceBox.value = "";
+      timeBox.value = "";
       removeMark.style.display = "none";
       mapMarked = false;
     });
