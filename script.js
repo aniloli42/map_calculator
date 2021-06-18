@@ -5,6 +5,7 @@ let inputValues = [];
 let displayPrice = document.getElementById("displayResult");
 let mapMarked = false;
 const removeMark = document.getElementById("removeMark");
+let map;
 let getDistance;
 let getTime;
 let secondMarkCords;
@@ -25,9 +26,11 @@ let defaultMarkers = {
 };
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById("map"), options);
+  map = new google.maps.Map(document.getElementById("map"), options);
 
-  //   Listen for click on map
+  let marker = new google.maps.Marker();
+
+  //   Add the marker when clicked in particular part
   google.maps.event.addListener(map, "click", function (event) {
     if (mapMarked == false) {
       mapMarked = true;
@@ -37,11 +40,12 @@ function initMap() {
     }
   });
 
-  // place mark
+  //AutoComplete the search within the country Italy
 
   var addOption = {
-    types: ["address"],
+    types: ["establishment"],
     fields: ["formatted_address", "geometry", "name"],
+    price_level: 0,
   };
 
   var autocomplete1 = new google.maps.places.Autocomplete(
@@ -50,9 +54,10 @@ function initMap() {
   );
   autocomplete1.bindTo("bounds", map);
 
-  // Add the restriction search
+  // Add the restriction search to Italy
   autocomplete1.setComponentRestrictions({ country: ["IT"] });
 
+  // Locate the place
   var placeBtn = document.getElementById("placeBtn");
   placeBtn.addEventListener("click", () => {
     if ((placeAddress.value != "") & (placeAddress.value != undefined)) {
@@ -64,10 +69,9 @@ function initMap() {
 
   addMarker(defaultMarkers);
 
+  // marker function
   function addMarker(props) {
-    let marker = new google.maps.Marker({
-      position: props.cords,
-    });
+    marker.setPosition(props.cords);
     marker.setMap(map);
     if (mapMarked) {
       secondMarkCords = {
@@ -78,7 +82,7 @@ function initMap() {
       };
       calcRoute(secondMarkCords.cords);
     }
-    removeMarked(marker);
+    removeMarked();
   }
 
   // create a Directions service object to use the route method
@@ -131,7 +135,7 @@ function initMap() {
   }
 
   //   remove mark
-  function removeMarked(marker) {
+  function removeMarked() {
     removeMark.addEventListener("click", () => {
       directionsDisplay.setDirections({ routes: [] });
       marker.setMap(null);
