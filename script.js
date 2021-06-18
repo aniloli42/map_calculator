@@ -15,9 +15,6 @@ const distanceBox = document.getElementById("distance");
 const timeBox = document.getElementById("time");
 var placeAddress = document.getElementById("placeAddress");
 let placeMessage = document.getElementById("placeMessage");
-let calcBtn = document.getElementById("calcBtn");
-let countDown = 14;
-let displaytime;
 var options = {
   zoom: 15,
   center: { lat: 40.7474824, lng: 14.6324808 },
@@ -142,20 +139,6 @@ function initMap() {
       addMarker(defaultMarkers);
       displayResult.style.display = "none";
       placeAddress.value = "";
-    });
-    calcBtn.addEventListener("click", () => {
-      setTimeout(() => {
-        directionsDisplay.setDirections({ routes: [] });
-        marker.setMap(null);
-        secondMarkCords = "";
-        calcMainForm.reset();
-        mapMarked = false;
-        map.setCenter(options.center);
-        map.setZoom(15);
-        addMarker(defaultMarkers);
-        displayResult.style.display = "none";
-        placeAddress.value = "";
-      }, 15000);
     });
   }
 }

@@ -143,13 +143,6 @@
   display: none;
 }
 
-.display-reset-message {
-  padding: 5px 0;
-  text-align: center;
-  font-size: 16px;
-  color: #1d2200;
-}
-
 @media (min-width: 465px) {
   .calc-form {
     min-width: 400px;
