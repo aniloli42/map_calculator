@@ -40,7 +40,8 @@ function initMap() {
   // place mark
 
   var addOption = {
-    types: ["(cities)"],
+    types: ["address"],
+    fields: ["formatted_address", "geometry", "name"],
   };
 
   var autocomplete1 = new google.maps.places.Autocomplete(
@@ -48,6 +49,9 @@ function initMap() {
     addOption
   );
   autocomplete1.bindTo("bounds", map);
+
+  // Add the restriction search
+  autocomplete1.setComponentRestrictions({ country: ["IT"] });
 
   var placeBtn = document.getElementById("placeBtn");
   placeBtn.addEventListener("click", () => {
