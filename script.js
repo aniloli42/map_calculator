@@ -45,7 +45,7 @@ function intialSetMap() {
 intialSetMap()
   .then(markerFunction())
   .catch((error) => {
-    console.log("that");
+    console.log("Error is map");
   });
 
 function markerFunction() {
@@ -242,7 +242,6 @@ function calculateTotal() {
     servicePrice = 20;
     addTax = 0;
   }
-  console.log(servicePrice, addTax);
   if (priceMessage == "") {
     displayResult.innerHTML = `Prezzo Totale: &euro; ${servicePrice + addTax}`;
     displayResult.style.backgroundColor = "#4bb543";
