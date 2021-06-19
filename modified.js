@@ -27,7 +27,10 @@ const resetMapBtn = document.getElementById("resetMapBtn");
 const displayResultDiv = document.getElementById("displayResult");
 const yesTollRadio = document.getElementById("yesTollRadio");
 const noTollRadio = document.getElementById("noTollRadio");
+const calculatorMainForm = document.getElementById("calcMain");
+let tollRadio;
 
+// initial map function
 function intialSetMap() {
   return new Promise((resolve, reject) => {
     map = new google.maps.Map(mapDisplaySelector, initialMapParameters);
@@ -81,9 +84,17 @@ autoCompleteSearch.setComponentRestrictions({ country: ["IT"] });
 
 // route using place address
 placeEnteredSearchBtn.addEventListener("click", () => {
-  if ((placeInputBox.value != null) & (placeInputBox.value != undefined)) {
+  if ((placeInputBox.value != "") & (placeInputBox.value != undefined)) {
     directionsDisplay.setDirections({ routes: [] });
     displayRoute(placeInputBox.value);
+  } else {
+    placeInputErrorMessage.innerHTML = "Inserisci l'indirizzo";
+    placeMessage.style.display = "block";
+    setTimeout(() => {
+      placeInputBox.value = "";
+      placeInputErrorMessage.innerHTML = "";
+      placeMessage.style.display = "none";
+    }, 3000);
   }
 });
 
@@ -161,13 +172,87 @@ function displayRoute(clientLocationPoint) {
 
 // when the calculate button
 let countDownTimer;
+let priceMessage = "";
+let servicePrice;
+let addTax;
 calculateMapBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  countDownTimer = setInterval(runCountDownTimer, 1000);
+  if (
+    (getDistance != undefined) & (getDistance != "") ||
+    (getTime != undefined) & (getTime != "")
+  ) {
+    if (getTime > 44 || getDistance > 43) {
+      priceMessage = `Servizio fuori copertura`;
+      displayResult.style.backgroundColor = "red";
+      displayResult.innerHTML = `${priceMessage}`;
+      displayResult.style.display = "block";
+      setTimeout(() => {
+        displayResult.style.display = "none";
+        calculatorMainForm.reset();
+        resetMapBtn.value = `Reset`;
+        directionsDisplay.setDirections({ routes: [] });
+        marker.setPosition(markerDefaultParameters.cords);
+        marker.setMap(map);
+        map.setZoom(15);
+        map.setCenter(initialMapParameters.center);
+      }, 3000);
+    } else {
+      servicePrice = 0;
+      addTax = 0;
+      noTollRadio.checked ? (tollRadio = "no") : (tollRadio = "yes");
+      priceMessage = "";
+      calculateTotal();
+      countDownTimer = setInterval(runCountDownTimer, 1000);
+    }
+  } else {
+    displayResult.style.backgroundColor = "red";
+    displayResult.innerHTML = `seleziona nella mappa o inserisci l'indirizzo`;
+    displayResult.style.display = "block";
+    setTimeout(() => {
+      displayResult.style.display = "none";
+    }, 3000);
+  }
 });
+
+// calculate the total price
+function calculateTotal() {
+  if ((getTime <= 25) & (getDistance <= 20)) {
+    servicePrice = 0;
+    addTax = 0;
+  } else if ((getTime <= 35) & (getDistance <= 20)) {
+    if (tollRadio == "no") {
+      servicePrice = 5;
+      addTax = 0;
+    } else {
+      servicePrice = 5;
+      addTax = 3;
+    }
+  } else if ((getTime <= 30) & (getDistance <= 30)) {
+    servicePrice = 10;
+    addTax = 0;
+  } else if ((getTime <= 37) & (getDistance <= 40)) {
+    if (tollRadio == "no") {
+      servicePrice = 15;
+      addTax = 0;
+    } else {
+      servicePrice = 15;
+      addTax = 5;
+    }
+  } else if ((getTime <= 44) & (getDistance <= 43)) {
+    servicePrice = 20;
+    addTax = 0;
+  }
+  console.log(servicePrice, addTax);
+  if (priceMessage == "") {
+    displayResult.innerHTML = `Prezzo Totale: &euro; ${servicePrice + addTax}`;
+    displayResult.style.backgroundColor = "#4bb543";
+    displayResult.style.display = "block";
+  }
+}
 
 // countdown display
 let count = 15;
+
 function runCountDownTimer() {
   if (count > 1) {
     count = count - 1;
@@ -175,10 +260,13 @@ function runCountDownTimer() {
   } else {
     clearInterval(countDownTimer);
     count = 15;
+    calculatorMainForm.reset();
     resetMapBtn.value = `Reset`;
+    displayResult.style.display = "none";
     directionsDisplay.setDirections({ routes: [] });
     marker.setPosition(markerDefaultParameters.cords);
     marker.setMap(map);
+    map.setZoom(15);
     map.setCenter(initialMapParameters.center);
   }
 }
@@ -186,11 +274,14 @@ function runCountDownTimer() {
 // when the reset Button Clicked
 resetMapBtn.addEventListener("click", () => {
   clearInterval(countDownTimer);
+  calculatorMainForm.reset();
   count = 15;
+  displayResult.style.display = "none";
   resetMapBtn.value = `Reset`;
   placeInputBox.value = "";
   directionsDisplay.setDirections({ routes: [] });
   marker.setPosition(markerDefaultParameters.cords);
   marker.setMap(map);
+  map.setZoom(15);
   map.setCenter(initialMapParameters.center);
 });
