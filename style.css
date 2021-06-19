@@ -143,6 +143,11 @@
   display: none;
 }
 
+.map-small {
+  font-weight: normal;
+  color: rgb(189, 189, 189);
+}
+
 @media (min-width: 465px) {
   .calc-form {
     min-width: 400px;

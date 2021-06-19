@@ -16,7 +16,7 @@
         type="text/javascript"
       ></script>
       <div class="place-address">
-        <label for="placeAddress">Indirizzo</label>
+        <label for="placeAddress">Inserisci l'indirizzo</label>
         <input
           type="text"
           id="placeAddress"
@@ -28,33 +28,50 @@
       <div class="calc-form">
         <form id="calcMain">
           <div class="input-group">
-            <label for="distance">Distanza</label>
+            <label for="distance"
+              >Distanza
+              <small class="map-small">(Recupero Automatico)</small></label
+            >
             <input
-              type="number"
+              type="text"
               name="distance"
               placeholder="(in km)"
               id="distance"
+              disabled
             />
           </div>
           <div class="input-group">
-            <label for="time">Tempo</label>
+            <label for="time"
+              >Tempo
+              <small class="map-small">(Recupero Automatico)</small></label
+            >
             <input
-              type="number"
+              type="text"
               name="time"
               id="time"
               placeholder="(in minuti)"
+              disabled
             />
           </div>
           <div class="input-group" id="tollDiv">
-            <label for="toll">Pedaggio</label>
+            <label for="toll"
+              >Pedaggio
+              <small class="map-small">(Seleziona Manualmente)</small></label
+            >
             <div class="radio">
-              <input type="radio" name="toll" value="yes" />si
-              <input type="radio" name="toll" value="no" checked />no
+              <input type="radio" name="toll" value="yes" id="yesTollRadio" />si
+              <input
+                type="radio"
+                name="toll"
+                value="no"
+                checked
+                id="noTollRadio"
+              />no
             </div>
           </div>
           <div class="input-group" id="formButtons">
-            <input type="submit" value="Calcola" id="calcBtn" />
-            <input type="reset" value="Reset" id="removeMark" />
+            <input type="submit" value="Calcola" id="calcMapBtn" />
+            <input type="reset" value="Reset" id="resetMapBtn" />
           </div>
         </form>
         <div class="display-result" id="displayResult"></div>
