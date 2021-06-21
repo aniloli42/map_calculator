@@ -190,6 +190,8 @@ calculateMapBtn.addEventListener("click", (e) => {
         displayResult.style.display = "none";
         calculatorMainForm.reset();
         resetMapBtn.value = `Reset`;
+        setTime = "";
+        setDIstance = "";
         directionsDisplay.setDirections({ routes: [] });
         marker.setPosition(markerDefaultParameters.cords);
         marker.setMap(map);
@@ -261,6 +263,8 @@ function runCountDownTimer() {
     count = 15;
     calculatorMainForm.reset();
     resetMapBtn.value = `Reset`;
+    setTime = "";
+    setDIstance = "";
     displayResult.style.display = "none";
     directionsDisplay.setDirections({ routes: [] });
     marker.setPosition(markerDefaultParameters.cords);
@@ -275,6 +279,8 @@ resetMapBtn.addEventListener("click", () => {
   clearInterval(countDownTimer);
   calculatorMainForm.reset();
   count = 15;
+  setTime = "";
+  setDIstance = "";
   displayResult.style.display = "none";
   resetMapBtn.value = `Reset`;
   placeInputBox.value = "";
